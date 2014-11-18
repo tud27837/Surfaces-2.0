@@ -68,7 +68,8 @@ public class Level {
                 ballStartPos = new Vector3f(50.0f, 13.0f, -15.0f);
                 game.getBall().setPhysicsLocation(ballStartPos);
                 createHoop(89.0f, 13.0f, -65.0f, 0.0f);
-                createDownBlock(15.0f, 16.0f, 15.0f, 17.0f, -5.0f, -10.0f);                 
+                createDownBlock(15.0f, 16.0f, 15.0f, 17.0f, -5.0f, -10.0f);
+                break;
             case 2:
                 //Level 2
                 model = game.getMain().getAssetManager().loadModel("Scenes/Level2.mesh.xml");
