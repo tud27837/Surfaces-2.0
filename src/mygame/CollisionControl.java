@@ -65,10 +65,12 @@ public class CollisionControl extends RigidBodyControl implements PhysicsCollisi
             // normal gravity switch
             if (event.getNodeA().getName().equals("NormGravSwitch") || event.getNodeB().getName().equals("NormGravSwitch")) {
                 game.getBulletAppState().getPhysicsSpace().setGravity(new Vector3f(0.0f, -9.81f, 0.0f));
+				game.soundSwitchDown.playInstance();
             }
             // reverse gravity switch
             if (event.getNodeA().getName().equals("RevGravSwitch") || event.getNodeB().getName().equals("RevGravSwitch")) {
                 game.getBulletAppState().getPhysicsSpace().setGravity(new Vector3f(0.0f, 9.81f, 0.0f));
+				game.soundSwitchUp.playInstance();
             }
         }
     }

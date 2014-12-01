@@ -7,6 +7,7 @@ package mygame;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.BetterCharacterControl;
@@ -74,6 +75,10 @@ class Game extends AbstractAppState implements ActionListener {
    /**
     * physics of the ball Geometry
     */
+    public AudioNode backgroundMusic,soundBall,soundSwitchUp,soundSwitchDown;
+    /**
+     * Audio nodes
+     */
     private RigidBodyControl ballPhys;
    /**
     * text object for the display of text when the level is complete
@@ -148,6 +153,7 @@ class Game extends AbstractAppState implements ActionListener {
         initGeometries();
         initPhysics();
         initPlayer();
+		initAudio();
         
         // load first level
         level = new Level(this);
@@ -287,6 +293,30 @@ class Game extends AbstractAppState implements ActionListener {
         bulletAppState.getPhysicsSpace().addCollisionListener(collCon);
     }
     
+	/** Initialize Audio by adding background music and sounds for gravity switches.
+     * 
+     */
+    private void initAudio()
+    {
+        
+        backgroundMusic = new AudioNode(main.getAssetManager(),"Sound/background.wav",true);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(3);
+        main.getRootNode().attachChild(backgroundMusic);
+        backgroundMusic.play();
+        
+        soundBall = new AudioNode(main.getAssetManager(),"Sound/Ball Rolling.wav",false);
+        soundBall.setVolume(4);
+        main.getRootNode().attachChild(backgroundMusic);
+        
+        soundSwitchUp = new AudioNode(main.getAssetManager(),"Sound/Switch Up.wav",false);
+        soundSwitchUp.setVolume(4);
+        main.getRootNode().attachChild(soundSwitchUp);
+        
+        soundSwitchDown = new AudioNode(main.getAssetManager(),"Sound/Switch Down.wav",false);
+        soundSwitchDown.setVolume(4);
+        main.getRootNode().attachChild(soundSwitchDown);
+    }
    /**
     * Returns true if the goal is reached, false if it is not.
     * 

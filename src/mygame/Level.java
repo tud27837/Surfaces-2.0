@@ -92,6 +92,34 @@ public class Level {
                 createNormGravSwitch(0f, 110f, -238f, 0f);
                 createHoop(0f, -4f, -248f, 0f);
                 break;
+			case 4:
+                //Level 4
+                model = game.getMain().getAssetManager().loadModel("Scenes/Level4.mesh.xml");
+                playerStartPos = new Vector3f(0, 0, 0);
+                game.getPlayer().setStart(playerStartPos);
+                ballStartPos = new Vector3f(-33.6f, -3f, -130.0f);
+                game.getBall().setPhysicsLocation(ballStartPos);
+                createHoop(-33.6f, -4f, -170.0f, 0.0f);
+                createLavaBlock(200f, 1.0f, 200f, 0.0f, -10.0f, 0.0f);
+                break;
+            case 5:
+                //Level 5
+                model = game.getMain().getAssetManager().loadModel("Scenes/Level5.j3o");
+                playerStartPos = new Vector3f(30, 15, -20);
+                game.getPlayer().setStart(playerStartPos);
+                ballStartPos = new Vector3f(30.0f, 15.0f, -25.0f);
+                game.getBall().setPhysicsLocation(ballStartPos);
+                createHoop(35f, 15f, 18f, 90f);
+                createGlassBlock(5f, .1f, 15f, -70f, 8.4f, -50f);  //Suppossed to be upblock
+                createGlassBlock(3f, .1f, 25f, 25f, 17f, 24.5f);     //Supposed to be down block
+                createGlassBlock(5f, .1f, 20f, -69f, 2f, 23f);       //Supposed to be updown block
+                createGlassBlock(5f, .1f, 12f, -40f, 4f, 37f);       //Supposed to be up block
+                createGlassBlock(5f, .1f, 12f, -22f, 9f, 37f);       //Supposed to be updown block
+                createNormGravSwitch(15f, 33f, 18f, 90f);
+                createRevGravSwitch(0f, 13f, 18f, 90f);
+                createLavaBlock(12f, .2f, 12f, -50f, 4f, 12f);
+                createLavaBlock(17f, .2f, 25f, 20f, 0f, 24.5f);
+                break;
             default:
                 //test level
                 model = game.getMain().getAssetManager().loadModel("Scenes/TestScene.j3o");
