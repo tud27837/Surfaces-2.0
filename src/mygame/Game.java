@@ -33,6 +33,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Cylinder;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
+import com.jme3.util.SkyFactory;
 
 /**
  * Spawns the player, ball, goal hoop, switches, surfaces, and level. Contains 
@@ -153,7 +154,8 @@ class Game extends AbstractAppState implements ActionListener {
         initGeometries();
         initPhysics();
         initPlayer();
-		initAudio();
+	initAudio();
+        initSky();
         
         // load first level
         level = new Level(this);
@@ -379,5 +381,13 @@ class Game extends AbstractAppState implements ActionListener {
         // reset normal gravity
         bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0, -9.81f, 0));
         level.resetLevel();
+    }
+    
+    /**
+    * Adds a skybox.
+    */
+    private void initSky() {
+        Spatial sky = SkyFactory.createSky(main.getAssetManager(), "Textures/BrightSky.dds", false);
+        main.getRootNode().attachChild(sky);
     }
 }
