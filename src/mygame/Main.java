@@ -6,15 +6,27 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.system.AppSettings;
+import de.lessvoid.nifty.Nifty;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Main class of the project. Initializes basic elements, creates and starts a 
+ * Main class of the project. Initializes basic elements, creates and starts a
  * simple app, and starts the game.
- * 
+ *
  * @author Zack Hunter
  * @version %I% %G%
  * @see SimpleApplication
@@ -22,36 +34,40 @@ import java.awt.Toolkit;
  */
 public class Main extends SimpleApplication {
 
-   /**
-    * gold colored material. Can be applied to many geometries.
-    */
+    /**
+     * gold colored material. Can be applied to many geometries.
+     */
     public static Material gold;
     /**
-    * magenta colored material. Can be applied to many geometries.
-    */
+     * magenta colored material. Can be applied to many geometries.
+     */
     public static Material magenta;
     /**
-    * red colored material. Can be applied to many geometries.
-    */
+     * red colored material. Can be applied to many geometries.
+     */
     public static Material red;
     /**
-    * green colored material. Can be applied to many geometries.
-    */
+     * green colored material. Can be applied to many geometries.
+     */
     public static Material green;
     /**
-    * white colored material. Can be applied to many geometries.
-    */
+     * white colored material. Can be applied to many geometries.
+     */
     public static Material white;
     /**
-    * yellow colored material. Can be applied to many geometries.
-    */
+     * yellow colored material. Can be applied to many geometries.
+     */
     public static Material yellow;
+    //private float[][] highscores = new float[4][10];
+    private Map<Integer, List<String[]>> highscores;
+    private File file;
+    private Nifty nifty;
 
-   /**
-    * Main method of the project. Sets up the app.
-    * 
-    * @param args array of Strings containing default arguments
-    */
+    /**
+     * Main method of the project. Sets up the app.
+     *
+     * @param args array of Strings containing default arguments
+     */
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -64,12 +80,12 @@ public class Main extends SimpleApplication {
         app.setSettings(settings);
         app.start();
     }
-    
-   /**
-    * Returns the settings object of the current app.
-    * 
-    * @return an AppSettings object containing the settings of the app
-    */
+
+    /**
+     * Returns the settings object of the current app.
+     *
+     * @return an AppSettings object containing the settings of the app
+     */
     public AppSettings getSettings() {
         return (settings);
     }
@@ -85,22 +101,44 @@ public class Main extends SimpleApplication {
         initGui();
         this.inputManager.clearMappings(); // clear default mappings
 
+        // Highscores and Save file
+        highscores = new HashMap();
+        try {
+            file = new File("highscores.txt");
+            if (!readPreviousScores()) {
+                for (int i = 0; i < 4; i++) {
+                    List<String[]> time = new ArrayList();
+                    for (int j = 0; j < 10; j++) {
+                        time.add(new String[]{"999", "59.99"});
+                    }
+                    highscores.put(i, time);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
         // This starts the game
         StartScreen s = new StartScreen();
         stateManager.attach(s);
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, viewPort);
+        nifty = niftyDisplay.getNifty();
+        guiViewPort.addProcessor(niftyDisplay);
+        nifty.fromXml("Interface/niftyScreens.xml", "start", s);
+        flyCam.setDragToRotate(true);
     }
 
-   /**
-    * Detaches all children from both the rootNode and the guiNode of the Main m 
-    * argument.
-    * 
-    * @param m a Main class instance
-    */
+    /**
+     * Detaches all children from both the rootNode and the guiNode of the Main
+     * m argument.
+     *
+     * @param m a Main class instance
+     */
     protected static void clearJMonkey(Main m) {
         m.guiNode.detachAllChildren();
         m.rootNode.detachAllChildren();
     }
-    
+
     /**
      *
      * @param tpf
@@ -113,12 +151,12 @@ public class Main extends SimpleApplication {
     // -------------------------------------------------------------------------
     // Initialization Methods
     // -------------------------------------------------------------------------
-   /**
-    * Initialize all materials to be used throughout the project. The individual
-    * materials are stored in public global variables in this class
-    * 
-    * @see Material
-    */
+    /**
+     * Initialize all materials to be used throughout the project. The
+     * individual materials are stored in public global variables in this class
+     *
+     * @see Material
+     */
     private void initMaterials() {
         gold = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         gold.setBoolean("UseMaterialColors", true);
@@ -133,52 +171,52 @@ public class Main extends SimpleApplication {
         magenta.setColor("Diffuse", ColorRGBA.Blue);
         magenta.setColor("Specular", ColorRGBA.Red);
         magenta.setFloat("Shininess", 2f); // shininess from 1-128
-        
+
         red = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         red.setBoolean("UseMaterialColors", true);
         red.setColor("Ambient", ColorRGBA.Red);
         red.setColor("Diffuse", ColorRGBA.Red);
         red.setColor("Specular", ColorRGBA.Red);
         red.setFloat("Shininess", 2f);
-        
+
         green = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         green.setBoolean("UseMaterialColors", true);
         green.setColor("Ambient", ColorRGBA.Green);
         green.setColor("Diffuse", ColorRGBA.Green);
         green.setColor("Specular", ColorRGBA.Green);
         green.setFloat("Shininess", 2f);
-        
+
         white = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         white.setBoolean("UseMaterialColors", true);
         white.setColor("Ambient", ColorRGBA.White);
         white.setColor("Diffuse", ColorRGBA.White);
         white.setColor("Specular", ColorRGBA.Gray);
         white.setFloat("Shininess", 2f);
-        
-        yellow =  new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+
+        yellow = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         yellow.setBoolean("UseMaterialColors", true);
-        yellow.setColor("Ambient", new ColorRGBA(255,255,0,0));
-        yellow.setColor("Diffuse", new ColorRGBA(255,255,0,0));
-        yellow.setColor("Specular", new ColorRGBA(255,255,0,0));
+        yellow.setColor("Ambient", new ColorRGBA(255, 255, 0, 0));
+        yellow.setColor("Diffuse", new ColorRGBA(255, 255, 0, 0));
+        yellow.setColor("Specular", new ColorRGBA(255, 255, 0, 0));
         yellow.setFloat("Shininess", 2f);
     }
 
-   /**
-    * Initialize aspects of the GUI. Sets to display the frames per second and 
-    * hide other stats.
-    * 
-    * @see SimpleApplication#setDisplayFps(boolean) 
-    * @see SimpleApplication#setDisplayStatView(boolean) 
-    */
+    /**
+     * Initialize aspects of the GUI. Sets to display the frames per second and
+     * hide other stats.
+     *
+     * @see SimpleApplication#setDisplayFps(boolean)
+     * @see SimpleApplication#setDisplayStatView(boolean)
+     */
     private void initGui() {
         setDisplayFps(true);
         setDisplayStatView(false);
     }
 
-   /**
-    * Initialize light elements and shadow elements. Add them to the root 
-    * node and view port, respectively.
-    */
+    /**
+     * Initialize light elements and shadow elements. Add them to the root node
+     * and view port, respectively.
+     */
     private void initLightandShadow() {
         // Light 1: white, directional
         DirectionalLight sun1 = new DirectionalLight();
@@ -205,19 +243,94 @@ public class Main extends SimpleApplication {
         viewPort.addProcessor(dlsr);
     }
 
-   /**
-    * Initialize elements affecting the state of the camera. Set the camera's 
-    * starting position, move speed, and look direction as well as the background 
-    * color of the scene.
-    * 
-    * @see SimpleApplication#cam
-    * @see SimpleApplication#flyCam
-    */
+    /**
+     * Initialize elements affecting the state of the camera. Set the camera's
+     * starting position, move speed, and look direction as well as the
+     * background color of the scene.
+     *
+     * @see SimpleApplication#cam
+     * @see SimpleApplication#flyCam
+     */
     private void initCam() {
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(100f);
         cam.setLocation(new Vector3f(3f, 15f, 15f));
         cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
+    }
+
+    public Nifty getNifty() {
+        return nifty;
+    }
+
+    private boolean readPreviousScores() throws IOException {
+        if (!file.exists()) {
+            file.createNewFile();
+            return false;
+        } else {
+            BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
+            String line;
+            for (int i = 0; i < 4; i++) {
+                List<String[]> timeList = new ArrayList();
+                for (int j = 0; j < 10; j++) {
+                    line = br.readLine();
+                    String[] time = new String[2];
+                    int colon = line.indexOf(':');
+                    time[0] = line.substring(0, colon);
+                    time[1] = line.substring(colon + 1);
+                    timeList.add(time);
+                }
+                highscores.put(i, timeList);
+            }
+            br.close();
+            return true;
+        }
+    }
+
+    private void writeScoresToFile() throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
+        for (int i = 0; i < 4; i++) {
+            List<String[]> timeList = highscores.get(i);
+            for (int j = 0; j < 10; j++) {
+                String[] time = timeList.get(j);
+                bw.write(String.format("%s:%s", time[0], time[1]));
+                bw.newLine();
+            }
+        }
+        bw.close();
+    }
+
+    public List<String[]> getHighScores(int level) {
+        return highscores.get(level - 1);
+    }
+
+    public void setHighScores(int level, int minutes, float seconds) {
+        List<String[]> timeList = highscores.remove(level - 1);
+        int index = -1;
+        for (int i = 0; i < 10; i++) {
+            String[] time = timeList.get(i);
+            int min = Integer.parseInt(time[0]);
+            float sec = Float.parseFloat(time[1]);
+            if (minutes < min) {
+                index = i;
+                break;
+            } else if ((minutes == min) && (seconds <= sec)) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            String[] high = new String[2];
+            high[0] = Integer.toString(minutes);
+            high[1] = String.format("%.2f", seconds);
+            timeList.add(index, high);
+            timeList.remove(10);
+        }
+        highscores.put(level - 1, timeList);
+        try {
+            writeScoresToFile();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
