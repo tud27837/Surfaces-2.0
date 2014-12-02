@@ -24,10 +24,11 @@ import java.util.ArrayList;
  * @author Zack
  */
 public class Level {
-    
+
     private Game game;
     private Spatial model;
     private int levelNum;
+    private final int NUMBEROFLEVELS = 5;
     private int listIndex = 0;
     private int upDownIndex = 0;
     private int upIndex = 0;
@@ -45,7 +46,7 @@ public class Level {
     private ArrayList<RigidBodyControl> upPhysList = new ArrayList<RigidBodyControl>();
     private ArrayList<RigidBodyControl> downPhysList = new ArrayList<RigidBodyControl>();
     private ArrayList<Geometry> geomList = new ArrayList<Geometry>();
-    
+
     public Level(Game game) {
         this.game = game;
         nodeUp = new Node();
@@ -57,7 +58,7 @@ public class Level {
         levelNum = 1;
         loadLevel();
     }
-    
+
     public void loadLevel() {
         switch (levelNum) {
             case 1:
@@ -92,7 +93,7 @@ public class Level {
                 createNormGravSwitch(0f, 110f, -238f, 0f);
                 createHoop(0f, -4f, -248f, 0f);
                 break;
-			case 4:
+            case 4:
                 //Level 4
                 model = game.getMain().getAssetManager().loadModel("Scenes/Level4.mesh.xml");
                 playerStartPos = new Vector3f(0, 0, 0);
@@ -151,32 +152,37 @@ public class Level {
         model.addControl(landscape);
         game.getBulletAppState().getPhysicsSpace().add(landscape);
     }
-    
-    public void nextLevel() {
+
+    public boolean nextLevel() {
         clearLevel();
-        ++levelNum;
+        if (++levelNum <= NUMBEROFLEVELS) {
+            loadLevel();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void resetLevel() {
+        clearLevel();
         loadLevel();
     }
-    
-    public void resetLevel(){
-        clearLevel();
-        loadLevel();
-    }
-    
+
     //checks each of the possible added geometry's and if they are there destroys them and the physics frame
-    
-    public void clearLevel(){
-        if(game.getMain().getRootNode().hasChild(model)){
+    public void clearLevel() {
+        if (game.getMain().getRootNode().hasChild(model)) {
             game.getMain().getRootNode().detachChild(model);
             game.getBulletAppState().getPhysicsSpace().removeCollisionObject(landscape);
         }
         clearMovableSurfaces();
         clearLists();
+        game.getBall().setLinearVelocity(Vector3f.ZERO);
+        game.getBall().setAngularVelocity(Vector3f.ZERO);
     }
-    
+
     /*creates a completion hoop at specified coordinates
      For the rotation field just fill in 90.0f or 0.0.f, one makes the hoop face north/south the other east/west*/
-    public void createHoop(float x, float y, float z, float rotation){
+    public void createHoop(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("Hoop", hoop));
         geom.setMaterial(game.getMain().magenta);
@@ -187,9 +193,9 @@ public class Level {
         geom.addControl(phys);
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
-    
+
     //creates a high gravity switch at specified coordinates
-    public void createHighGravSwitch(float x, float y, float z, float rotation){
+    public void createHighGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("HighGravSwitch", hoop));
         geom.setMaterial(game.getMain().yellow);
@@ -200,9 +206,9 @@ public class Level {
         geom.addControl(phys);
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
-    
+
     //creates a low gravity switch at specified coordinates
-    public void createLowGravSwitch(float x, float y, float z, float rotation){
+    public void createLowGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("LowGravSwitch", hoop));
         geom.setMaterial(game.getMain().red);
@@ -213,9 +219,9 @@ public class Level {
         geom.addControl(phys);
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
-    
+
     //creates a normal gravity switch at specified coordinates
-    public void createNormGravSwitch(float x, float y, float z, float rotation){
+    public void createNormGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("NormGravSwitch", hoop));
         geom.setMaterial(game.getMain().green);
@@ -226,9 +232,9 @@ public class Level {
         geom.addControl(phys);
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
-    
+
     //creates a reverse gravity switch at specified coordinates
-    public void createRevGravSwitch(float x, float y, float z, float rotation){
+    public void createRevGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("RevGravSwitch", hoop));
         geom.setMaterial(game.getMain().white);
@@ -239,9 +245,9 @@ public class Level {
         geom.addControl(phys);
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
-    
+
     //creates a glass block at specified coordinates
-    public void createGlassBlock(float l, float h, float w, float x, float y, float z){
+    public void createGlassBlock(float l, float h, float w, float x, float y, float z) {
         listIndex++;
         geomList.add(geom = new Geometry("GlassCeiling", new Box(l, h, w)));
         Material glassMat = new Material(game.getMain().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -255,9 +261,9 @@ public class Level {
         geom.addControl(phys);
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
-    
+
     //creates a lava block at specified coordinates
-    public void createLavaBlock(float l, float h, float w, float x, float y, float z){
+    public void createLavaBlock(float l, float h, float w, float x, float y, float z) {
         listIndex++;
         geomList.add(geom = new Geometry("Lava", new Box(l, h, w)));
         Material lavaMat = new Material(game.getMain().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -269,8 +275,8 @@ public class Level {
         geom.addControl(phys);
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
-    
-    public void createUpDownBlock(float l, float h, float w, float x, float y, float z){
+
+    public void createUpDownBlock(float l, float h, float w, float x, float y, float z) {
         Vector3f currentUpDownPosition;
         upDownIndex++;
         geom = new Geometry("SurfUpDown", new Box(l, h, w));
@@ -282,8 +288,8 @@ public class Level {
         geom.addControl(upDownPhys);
         game.getBulletAppState().getPhysicsSpace().add(upDownPhys);
     }
-    
-    public void createUpBlock(float l, float h, float w, float x, float y, float z){
+
+    public void createUpBlock(float l, float h, float w, float x, float y, float z) {
         Vector3f currentUpPosition;
         upIndex++;
         geom = new Geometry("SurfUp", new Box(l, h, w));
@@ -295,11 +301,11 @@ public class Level {
         geom.addControl(upPhys);
         game.getBulletAppState().getPhysicsSpace().add(upPhys);
     }
-    
-    public void createDownBlock(float l, float h, float w, float x, float y, float z){
+
+    public void createDownBlock(float l, float h, float w, float x, float y, float z) {
         Vector3f currentDownPosition;
         downIndex++;
-        geom = new Geometry("SurfDown",new Box(l, h, w));
+        geom = new Geometry("SurfDown", new Box(l, h, w));
         geom.setMaterial(game.getMain().yellow);
         downPositionList.add(currentDownPosition = new Vector3f(x, y, z));
         geom.setLocalTranslation(currentDownPosition);
@@ -308,68 +314,68 @@ public class Level {
         geom.addControl(downPhys);
         game.getBulletAppState().getPhysicsSpace().add(downPhys);
     }
-    
-    public void moveSurfaceUp(){
-        if(!upDownPositionList.isEmpty()){
+
+    public void moveSurfaceUp() {
+        if (!upDownPositionList.isEmpty()) {
             nodeUpDown.move(0f, .5f, 0f);
-            for(int i = 0; i < upDownIndex; i++){
+            for (int i = 0; i < upDownIndex; i++) {
                 upDownPositionList.get(i).setY(upDownPositionList.get(i).getY() + 0.5f);
                 upDownPhysList.get(i).setPhysicsLocation(upDownPositionList.get(i));
             }
         }
-        if(!upPositionList.isEmpty()){
+        if (!upPositionList.isEmpty()) {
             nodeUp.move(0f, .5f, 0f);
-            for(int i = 0; i < upIndex; i++){
+            for (int i = 0; i < upIndex; i++) {
                 upPositionList.get(i).setY(upPositionList.get(i).getY() + 0.5f);
                 upPhysList.get(i).setPhysicsLocation(upPositionList.get(i));
             }
         }
     }
-    
-    public void moveSurfaceDown(){
-        if(!upDownPositionList.isEmpty()){
+
+    public void moveSurfaceDown() {
+        if (!upDownPositionList.isEmpty()) {
             nodeUpDown.move(0f, -.5f, 0f);
-            for(int i = 0; i < upDownIndex; i++){
+            for (int i = 0; i < upDownIndex; i++) {
                 upDownPositionList.get(i).setY((upDownPositionList.get(i).getY() - 0.5f));
                 upDownPhysList.get(i).setPhysicsLocation(upDownPositionList.get(i));
             }
         }
-        if(!downPositionList.isEmpty()){
+        if (!downPositionList.isEmpty()) {
             nodeDown.move(0f, -.5f, 0f);
-            for(int i = 0; i < downIndex; i++){
+            for (int i = 0; i < downIndex; i++) {
                 downPositionList.get(i).setY((downPositionList.get(i).getY() - 0.5f));
                 downPhysList.get(i).setPhysicsLocation(downPositionList.get(i));
             }
         }
     }
-    
-    public void clearMovableSurfaces(){
+
+    public void clearMovableSurfaces() {
         nodeUpDown.detachAllChildren();
         nodeUp.detachAllChildren();
         nodeDown.detachAllChildren();
         nodeUpDown.setLocalTranslation(0f, 0f, 0f);
         nodeUp.setLocalTranslation(0f, 0f, 0f);
         nodeDown.setLocalTranslation(0f, 0f, 0f);
-        while(upDownIndex > 0){
+        while (upDownIndex > 0) {
             upDownIndex--;
             game.getBulletAppState().getPhysicsSpace().removeCollisionObject(upDownPhysList.get(upDownIndex));
         }
-        while(upIndex > 0){
+        while (upIndex > 0) {
             upIndex--;
             game.getBulletAppState().getPhysicsSpace().removeCollisionObject(upPhysList.get(upIndex));
         }
-        while(downIndex > 0){
+        while (downIndex > 0) {
             downIndex--;
             game.getBulletAppState().getPhysicsSpace().removeCollisionObject(downPhysList.get(downIndex));
         }
-        while(listIndex > 0){
+        while (listIndex > 0) {
             listIndex--;
             game.getMain().getRootNode().detachChild(geomList.get(listIndex));
-            game.getBulletAppState().getPhysicsSpace().removeCollisionObject(physList.get(listIndex));   
+            game.getBulletAppState().getPhysicsSpace().removeCollisionObject(physList.get(listIndex));
         }
     }
-    
-    public void clearLists(){
+
+    public void clearLists() {
         upDownPositionList.clear();
         upPositionList.clear();
         downPositionList.clear();
@@ -383,12 +389,16 @@ public class Level {
     public Spatial getModel() {
         return model;
     }
-    
+
     public Vector3f getPlayerStart() {
         return playerStartPos;
     }
-    
+
     public Vector3f getBallStart() {
         return ballStartPos;
+    }
+
+    public int getLevelNum() {
+        return levelNum;
     }
 }
