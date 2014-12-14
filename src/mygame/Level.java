@@ -28,7 +28,7 @@ public class Level {
     private Game game;
     private Spatial model;
     private int levelNum;
-    private final int NUMBEROFLEVELS = 5;
+    private final int NUMBEROFLEVELS = 7;
     private int listIndex = 0;
     private int upDownIndex = 0;
     private int upIndex = 0;
@@ -60,6 +60,7 @@ public class Level {
     }
 
     public void loadLevel() {
+        //System.out.println(levelNum);
         switch (levelNum) {
             case 1:
                 //Level 1
@@ -111,15 +112,69 @@ public class Level {
                 ballStartPos = new Vector3f(30.0f, 15.0f, -25.0f);
                 game.getBall().setPhysicsLocation(ballStartPos);
                 createHoop(35f, 15f, 18f, 90f);
-                createGlassBlock(5f, .1f, 15f, -70f, 8.4f, -50f);  //Suppossed to be upblock
-                createGlassBlock(3f, .1f, 25f, 25f, 17f, 24.5f);     //Supposed to be down block
-                createGlassBlock(5f, .1f, 20f, -69f, 2f, 23f);       //Supposed to be updown block
-                createGlassBlock(5f, .1f, 12f, -40f, 4f, 37f);       //Supposed to be up block
-                createGlassBlock(5f, .1f, 12f, -22f, 9f, 37f);       //Supposed to be updown block
+                createUpBlock(5f, .1f, 15f, -70f, 8.4f, -50f);  //Suppossed to be upblock
+                createDownBlock(3f, .1f, 25f, 25f, 17f, 24.5f);     //Supposed to be down block
+                createUpDownBlock(5f, .1f, 20f, -69f, 2f, 23f);       //Supposed to be updown block
+                createUpBlock(5f, .1f, 12f, -40f, 4f, 37f);       //Supposed to be up block
+                createUpDownBlock(5f, .1f, 12f, -22f, 9f, 37f);       //Supposed to be updown block
                 createNormGravSwitch(15f, 33f, 18f, 90f);
                 createRevGravSwitch(0f, 13f, 18f, 90f);
                 createLavaBlock(12f, .2f, 12f, -50f, 4f, 12f);
                 createLavaBlock(17f, .2f, 25f, 20f, 0f, 24.5f);
+                break;
+            case 6:
+                //Level 6
+                model = game.getMain().getAssetManager().loadModel("Scenes/Level7.mesh.xml");
+                playerStartPos = new Vector3f(10, 2, -10);
+                game.getPlayer().setStart(playerStartPos);
+                ballStartPos = new Vector3f(10f, 2f, -20f);
+                game.getBall().setPhysicsLocation(ballStartPos);
+                createLavaBlock(300.0f, 1.0f, 300.0f, 50.0f, 31.0f, 50.0f);
+                createGlassBlock(0.2f, 15.0f, 25.0f, 86.7f, 25.0f, -19.0f);
+                createGlassBlock(0.2f, 30.0f, 21.8f, 86.7f, 5.0f, -65.6f);
+                createGlassBlock(0.2f, 15.0f, 25.0f, 86.7f, 5.0f, -112.5f);
+                createGlassBlock(0.2f, 15.0f, 25.0f, 43.4f, 5.0f, -19.0f);
+                createGlassBlock(0.2f, 30.0f, 21.8f, 43.4f, 5.0f, -65.6f);
+                createGlassBlock(0.2f, 15.0f, 25.0f, 43.4f, 5.0f, -112.5f);
+                createGlassBlock(25.0f, 15.0f, 0.2f, 18.5f, 5.0f, -87.3f);
+                createGlassBlock(21.5f, 15.0f, 0.2f, 65.0f, 5.0f, -87.3f);
+                createGlassBlock(25.0f, 15.0f, 0.2f, 112.0f, 25.0f, -87.3f);
+                createGlassBlock(25.0f, 15.0f, 0.2f, 18.5f, 25.0f, -43.5f);
+                createGlassBlock(21.5f, 30.0f, 0.2f, 65.0f, 5.0f, -43.5f);
+                createGlassBlock(25.0f, 15.0f, 0.2f, 112.0f, 5.0f, -43.5f);
+                createRevGravSwitch(20.0f, 1.5f, -85.0f, 0.0f);
+                createRevGravSwitch(20.0f, 1.5f, -90.0f, 0.0f);
+                createNormGravSwitch(40.0f, 27.5f, -100.0f, 90.0f);
+                createRevGravSwitch(40.0f, 1.5f, -20.0f, 90.0f);
+                createNormGravSwitch(65.0f, 27.5f, -20.0f, 90.0f);
+                createRevGravSwitch(127.0f, 1.5f, -35.0f, 90.0f);
+                createNormGravSwitch(100.0f, 27.5f, -60.0f, 90.0f);
+                createRevGravSwitch(110.0f, 1.5f, -126.0f, 0.0f);
+                createNormGravSwitch(65.0f, 27.5f, -67.0f, 0.0f);
+                createHoop(70.0f, 1.5f, -50.0f, 180.0f);
+                createRevGravSwitch(72.0f, 1.5f, -51.0f, 30.0f);
+                createRevGravSwitch(68.0f, 1.5f, -51.0f, 150.0f);
+                createRevGravSwitch(72.0f, 1.5f, -49.5f, 90.0f);
+                createRevGravSwitch(68.0f, 1.5f, -49.5f, 90.0f);
+                createRevGravSwitch(70.0f, 1.5f, -49.5f, 0.0f);
+                createLavaBlock(21.5f, 10.0f, 32.6f, 65.0f, -9.0f, -120.0f);
+                createNormGravSwitch(61.0f, 27.5f, -125.5f, 90.0f);
+                createNormGravSwitch(61.0f, 27.5f, -121.5f, 90.0f);
+                break;
+            case 7:
+                //Level 7
+                model = game.getMain().getAssetManager().loadModel("Scenes/Level6.mesh.xml");
+                playerStartPos = new Vector3f(3.5f, 55f, -3.5f);
+                game.getPlayer().setStart(playerStartPos);
+                ballStartPos = new Vector3f(22f, 55f, -5f);
+                game.getBall().setPhysicsLocation(ballStartPos);
+                createLavaBlock(300.0f, 1.0f, 300.0f, 50.0f, -5.0f, 50.0f);
+                createDownBlock(10.0f, 4.0f, 7.0f, 28.0f, 48.0f, -77.5f);
+                createUpBlock(10.0f, 4.0f, 8.0f, 28.0f, 25.4f, -46.5f);
+                createHoop(22.0f, 8.0f, -115.0f, 0.0f);
+                createGlassBlock(0.3f, 62.0f, 59.0f, 18.0f, 0.0f, -60.0f);
+                createLavaBlock(10.0f, 0.4f, 6.5f, 28.01f, 29.3f, -77.0f);
+                createLavaBlock(10.0f, 0.4f, 8.0f, 28.01f, 28.3f, -46.5f);
                 break;
             default:
                 //test level
@@ -154,8 +209,9 @@ public class Level {
     }
 
     public boolean nextLevel() {
-        clearLevel();
+        
         if (++levelNum <= NUMBEROFLEVELS) {
+            clearLevel();
             loadLevel();
             return true;
         } else {
