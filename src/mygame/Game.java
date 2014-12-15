@@ -301,7 +301,7 @@ class Game extends AbstractAppState implements ActionListener {
                     EndScreen e = new EndScreen();
                     main.getNifty().gotoScreen("end");
                     asm.attach(e);
-                    asm.detach(this);
+                    this.setEnabled(false);
                 }
                 break;
         }

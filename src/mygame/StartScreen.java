@@ -202,11 +202,11 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
     }
 
     public void nextLevel() {
-        g.endLevel();
         main.getFlyByCamera().setDragToRotate(false);
         nifty.gotoScreen("hud");
-        asm.attach(g);
         asm.detach(asm.getState(EndScreen.class));
+        g.setEnabled(true);
+        g.endLevel();
     }
 
     @Override
