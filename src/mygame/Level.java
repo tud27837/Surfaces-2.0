@@ -55,7 +55,7 @@ public class Level {
         game.getMain().getRootNode().attachChild(nodeUp);
         game.getMain().getRootNode().attachChild(nodeDown);
         game.getMain().getRootNode().attachChild(nodeUpDown);
-        levelNum = 1;
+        levelNum=1;
         loadLevel();
     }
 
@@ -112,11 +112,11 @@ public class Level {
                 ballStartPos = new Vector3f(30.0f, 15.0f, -25.0f);
                 game.getBall().setPhysicsLocation(ballStartPos);
                 createHoop(35f, 15f, 18f, 90f);
-                createUpBlock(5f, .1f, 15f, -70f, 8.4f, -50f);  //Suppossed to be upblock
-                createDownBlock(3f, .1f, 25f, 25f, 17f, 24.5f);     //Supposed to be down block
-                createUpDownBlock(5f, .1f, 20f, -69f, 2f, 23f);       //Supposed to be updown block
-                createUpBlock(5f, .1f, 12f, -40f, 4f, 37f);       //Supposed to be up block
-                createUpDownBlock(5f, .1f, 12f, -22f, 9f, 37f);       //Supposed to be updown block
+                createUpBlock(5f, .1f, 15f, -70f, 8.4f, -50f);  
+                createDownBlock(3f, .1f, 25f, 25f, 17f, 24.5f);  
+                createUpDownBlock(5f, .1f, 20f, -69f, 2f, 23f);  
+                createUpBlock(5f, .1f, 12f, -40f, -5f, 37f);      
+                createUpDownBlock(5f, .1f, 12f, -22f, 9f, 37f);  
                 createNormGravSwitch(15f, 33f, 18f, 90f);
                 createRevGravSwitch(0f, 13f, 18f, 90f);
                 createLavaBlock(12f, .2f, 12f, -50f, 4f, 12f);
@@ -176,6 +176,18 @@ public class Level {
                 createLavaBlock(10.0f, 0.4f, 6.5f, 28.01f, 29.3f, -77.0f);
                 createLavaBlock(10.0f, 0.4f, 8.0f, 28.01f, 28.3f, -46.5f);
                 break;
+             case 8:
+                 //Level 8
+                model=game.getMain().getAssetManager().loadModel("Scenes/level8.j3o");
+                playerStartPos = new Vector3f(-60f,5f,-10f);
+                game.getPlayer().setStart(playerStartPos);
+                ballStartPos = new Vector3f(-60.0f, 1.0f, -8.0f);
+                game.getBall().setPhysicsLocation(ballStartPos);
+                createHoop(-20.0f, 2.0f, 15f,90f);
+                createGlassBlock(.2f,10f,10f,-42f,5f,21f);
+                createDownBlock(4.5f, .1f, 10f,-28f,15f,-15f);
+                createLavaBlock(4.7f, .1f, 32.5f,-28f,-3f,-2f);
+                break;    
             default:
                 //test level
                 model = game.getMain().getAssetManager().loadModel("Scenes/TestScene.j3o");
