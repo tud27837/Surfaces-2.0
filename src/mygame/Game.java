@@ -368,7 +368,10 @@ class Game extends AbstractAppState implements ActionListener {
                             main.getSettings().getHeight() - (main.getSettings().getHeight() / 10), 0f);
                     main.setHighScores(level.getLevelNum(), levelTimeMinutes, levelTimeSeconds);
                     main.getFlyByCamera().setDragToRotate(true);
+                    EndScreen e = new EndScreen();
                     main.getNifty().gotoScreen("end");
+                    asm.attach(e);
+                    this.setEnabled(false);
                 }
                 break;
         }

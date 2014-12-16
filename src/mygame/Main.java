@@ -116,7 +116,7 @@ public class Main extends SimpleApplication {
         try {
             file = new File("highscores.txt");
             if (!readPreviousScores()) {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 8; i++) {
                     List<String[]> time = new ArrayList();
                     for (int j = 0; j < 10; j++) {
                         time.add(new String[]{"999", "59.99"});
@@ -292,7 +292,7 @@ public class Main extends SimpleApplication {
         } else {
             BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
             String line;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 8; i++) {
                 List<String[]> timeList = new ArrayList();
                 for (int j = 0; j < 10; j++) {
                     line = br.readLine();
@@ -316,7 +316,7 @@ public class Main extends SimpleApplication {
      */
     private void writeScoresToFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             List<String[]> timeList = highscores.get(i);
             for (int j = 0; j < 10; j++) {
                 String[] time = timeList.get(j);

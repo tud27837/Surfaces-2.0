@@ -48,24 +48,44 @@
                 <image filename="Textures/MainTitle.png"></image>
             </panel>
             <panel id="panel_buttons" height="5%" width="75%" align="center" childLayout="horizontal">
-                <panel id="panel_button_level_1" height="100%" width="25%" align="center" childLayout="center">
+                <panel id="panel_button_level_1" height="100%" width="12.5%" align="center" childLayout="center">
                     <control name="button" label="Level 1" id="Level1Button" align="center" valign="center">
                         <interact onClick="showScores(1)" />
                     </control>
                 </panel>
-                <panel id="panel_button_level_2" height="100%" width="25%" align="center" childLayout="center">
+                <panel id="panel_button_level_2" height="100%" width="12.5%" align="center" childLayout="center">
                     <control name="button" label="Level 2" id="Level2Button" align="center" valign="center">
                         <interact onClick="showScores(2)" />
                     </control>
                 </panel>
-                <panel id="panel_button_level_3" height="100%" width="25%" align="center" childLayout="center">
+                <panel id="panel_button_level_3" height="100%" width="12.5%" align="center" childLayout="center">
                     <control name="button" label="Level 3" id="Level3Button" align="center" valign="center">
                         <interact onClick="showScores(3)" />
                     </control>
                 </panel>
-                <panel id="panel_button_level_4" height="100%" width="25%" align="center" childLayout="center">
+                <panel id="panel_button_level_4" height="100%" width="12.5%" align="center" childLayout="center">
                     <control name="button" label="Level 4" id="Level4Button" align="center" valign="center">
                         <interact onClick="showScores(4)" />
+                    </control>
+                </panel>
+                <panel id="panel_button_level_5" height="100%" width="12.5%" align="center" childLayout="center">
+                    <control name="button" label="Level 5" id="Level5Button" align="center" valign="center">
+                        <interact onClick="showScores(5)" />
+                    </control>
+                </panel>
+                <panel id="panel_button_level_6" height="100%" width="12.5%" align="center" childLayout="center">
+                    <control name="button" label="Level 6" id="Level6Button" align="center" valign="center">
+                        <interact onClick="showScores(6)" />
+                    </control>
+                </panel>
+                <panel id="panel_button_level_7" height="100%" width="12.5%" align="center" childLayout="center">
+                    <control name="button" label="Level 7" id="Level7Button" align="center" valign="center">
+                        <interact onClick="showScores(7)" />
+                    </control>
+                </panel>
+                <panel id="panel_button_level_8" height="100%" width="12.5%" align="center" childLayout="center">
+                    <control name="button" label="Level 8" id="Level8Button" align="center" valign="center">
+                        <interact onClick="showScores(8)" />
                     </control>
                 </panel>
             </panel>
