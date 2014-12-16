@@ -20,33 +20,137 @@ import com.jme3.scene.shape.Cylinder;
 import java.util.ArrayList;
 
 /**
+ * Contains all information about levels. Controls creation of level elements.
+ * Controls level switching.
  *
- * @author Zack
+ * @author Zack Hunter
+ * @author Eric Bullock
+ * @author Joseph DiIenno
+ * @author Mike Fatal
+ * @version %I% %G%
+ * @since 2.0
  */
 public class Level {
 
+    /**
+     * Instance of the game object.
+     */
     private Game game;
+    /**
+     * Spacial to hold the model of the level.
+     */
     private Spatial model;
+    /**
+     * Integer value for the current level number.
+     */
     private int levelNum;
+    /**
+     * Integer value for the total number of levels.
+     */
     private final int NUMBEROFLEVELS = 5;
+    /**
+     * Integer value for the number of objects in the geomList.
+     */
     private int listIndex = 0;
+    /**
+     * Integer value for the number of up-down blocks in the up-down lists.
+     */
     private int upDownIndex = 0;
+    /**
+     * Integer value for the number of up blocks in the up lists.
+     */
     private int upIndex = 0;
+    /**
+     * Integer value for the number of down blocks in the down lists.
+     */
     private int downIndex = 0;
-    private Node nodeUp, nodeDown, nodeUpDown;
-    private Vector3f playerStartPos, ballStartPos;
+    /**
+     * Node for an up block.
+     */
+    private Node nodeUp;
+    /**
+     * Node for a down block.
+     */
+    private Node nodeDown;
+    /**
+     * Node for an up-down block.
+     */
+    private Node nodeUpDown;
+    /**
+     * Vector3f for the initial start position of the player in the level.
+     */
+    private Vector3f playerStartPos;
+    /**
+     * Vectro3f for the initial start position of the ball in the level.
+     */
+    private Vector3f ballStartPos;
+    /**
+     * Geometry object used for creating various level elements.
+     */
     private Geometry geom;
-    private RigidBodyControl landscape, phys, upDownPhys, upPhys, downPhys;
+    /**
+     * Physics control for the level model.
+     */
+    private RigidBodyControl landscape;
+    /**
+     * Physics control for adding physics to various level elements.
+     */
+    private RigidBodyControl phys;
+    /**
+     * Physics control for the up-down blocks.
+     */
+    private RigidBodyControl upDownPhys;
+    /**
+     * Physics control for the up blocks.
+     */
+    private RigidBodyControl upPhys;
+    /**
+     * Physics control for the down blocks.
+     */
+    private RigidBodyControl downPhys;
+    /**
+     * Cylinder shape for the finish hoop and switches.
+     */
     private final Cylinder hoop = new Cylinder(30, 30, 1.5f, 0.1f, true);
+    /**
+     * List of the positions of all up-down blocks.
+     */
     private ArrayList<Vector3f> upDownPositionList = new ArrayList<Vector3f>();
+    /**
+     * List of the positions of all up blocks.
+     */
     private ArrayList<Vector3f> upPositionList = new ArrayList<Vector3f>();
+    /**
+     * List of the positions of all down blocks.
+     */
     private ArrayList<Vector3f> downPositionList = new ArrayList<Vector3f>();
+    /**
+     * List of the physics objects of all level elements.
+     */
     private ArrayList<RigidBodyControl> physList = new ArrayList<RigidBodyControl>();
+    /**
+     * List of the physics objects of all up-down blocks.
+     */
     private ArrayList<RigidBodyControl> upDownPhysList = new ArrayList<RigidBodyControl>();
+    /**
+     * List of the physics objects of all up blocks.
+     */
     private ArrayList<RigidBodyControl> upPhysList = new ArrayList<RigidBodyControl>();
+    /**
+     * List of the physics objects of all down blocks.
+     */
     private ArrayList<RigidBodyControl> downPhysList = new ArrayList<RigidBodyControl>();
+    /**
+     * List of the geometries of all level elements.
+     */
     private ArrayList<Geometry> geomList = new ArrayList<Geometry>();
 
+    /**
+     * Constructor. Attatch nodes for movable surface blocks. Set the level
+     * number. Load the initial level.
+     *
+     * @param game
+     */
     public Level(Game game) {
         this.game = game;
         nodeUp = new Node();
@@ -59,6 +163,9 @@ public class Level {
         loadLevel();
     }
 
+    /**
+     * Load the level and all elements corresponing to the current level number.
+     */
     public void loadLevel() {
         switch (levelNum) {
             case 1:
@@ -153,6 +260,11 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(landscape);
     }
 
+    /**
+     * Go to the next level. Return true if successful, otherwise return false.
+     *
+     * @return true if there is another level, otherwise false
+     */
     public boolean nextLevel() {
         clearLevel();
         if (++levelNum <= NUMBEROFLEVELS) {
@@ -163,12 +275,18 @@ public class Level {
         }
     }
 
+    /**
+     * Reset the level. Clear the level and load it again.
+     */
     public void resetLevel() {
         clearLevel();
         loadLevel();
     }
 
-    //checks each of the possible added geometry's and if they are there destroys them and the physics frame
+    /**
+     * Clear the level. Checks each of the possible added geometries and, if
+     * they are there, destroys them and the physics frame.
+     */
     public void clearLevel() {
         if (game.getMain().getRootNode().hasChild(model)) {
             game.getMain().getRootNode().detachChild(model);
@@ -180,8 +298,14 @@ public class Level {
         game.getBall().setAngularVelocity(Vector3f.ZERO);
     }
 
-    /*creates a completion hoop at specified coordinates
-     For the rotation field just fill in 90.0f or 0.0.f, one makes the hoop face north/south the other east/west*/
+    /**
+     * Creates the finish hoop at the specified coordinates.
+     *
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     * @param rotation float for the rotation in degrees
+     */
     public void createHoop(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("Hoop", hoop));
@@ -194,7 +318,14 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
 
-    //creates a high gravity switch at specified coordinates
+    /**
+     * Creates a high gravity switch at the specified coordinates.
+     *
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     * @param rotation float for the rotation in degrees
+     */
     public void createHighGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("HighGravSwitch", hoop));
@@ -207,7 +338,14 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
 
-    //creates a low gravity switch at specified coordinates
+    /**
+     * Creates a low gravity switch at the specified coordinates.
+     *
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     * @param rotation float for the rotation in degrees
+     */
     public void createLowGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("LowGravSwitch", hoop));
@@ -220,7 +358,14 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
 
-    //creates a normal gravity switch at specified coordinates
+    /**
+     * Creates a normal gravity switch at the specified coordinates.
+     *
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     * @param rotation float for the rotation in degrees
+     */
     public void createNormGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("NormGravSwitch", hoop));
@@ -233,7 +378,14 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
 
-    //creates a reverse gravity switch at specified coordinates
+    /**
+     * Creates a reverse gravity switch at the specified coordinates.
+     *
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     * @param rotation float for the rotation in degrees
+     */
     public void createRevGravSwitch(float x, float y, float z, float rotation) {
         listIndex++;
         geomList.add(geom = new Geometry("RevGravSwitch", hoop));
@@ -246,7 +398,16 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
 
-    //creates a glass block at specified coordinates
+    /**
+     * Creates a glass block of the specified size at the specified coordinates
+     *
+     * @param l float for the length of the block
+     * @param h float for the height of the block
+     * @param w float for the width of the block
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     */
     public void createGlassBlock(float l, float h, float w, float x, float y, float z) {
         listIndex++;
         geomList.add(geom = new Geometry("GlassCeiling", new Box(l, h, w)));
@@ -262,7 +423,16 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
 
-    //creates a lava block at specified coordinates
+    /**
+     * Creates a lava block of the specified size at the specified coordinates
+     *
+     * @param l float for the length of the block
+     * @param h float for the height of the block
+     * @param w float for the width of the block
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     */
     public void createLavaBlock(float l, float h, float w, float x, float y, float z) {
         listIndex++;
         geomList.add(geom = new Geometry("Lava", new Box(l, h, w)));
@@ -276,6 +446,17 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(phys);
     }
 
+    /**
+     * Creates an up-down block of the specified size at the specified
+     * coordinates
+     *
+     * @param l float for the length of the block
+     * @param h float for the height of the block
+     * @param w float for the width of the block
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     */
     public void createUpDownBlock(float l, float h, float w, float x, float y, float z) {
         Vector3f currentUpDownPosition;
         upDownIndex++;
@@ -289,6 +470,16 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(upDownPhys);
     }
 
+    /**
+     * Creates an up block of the specified size at the specified coordinates
+     *
+     * @param l float for the length of the block
+     * @param h float for the height of the block
+     * @param w float for the width of the block
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     */
     public void createUpBlock(float l, float h, float w, float x, float y, float z) {
         Vector3f currentUpPosition;
         upIndex++;
@@ -302,6 +493,16 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(upPhys);
     }
 
+    /**
+     * Creates a down block of the specified size at the specified coordinates
+     *
+     * @param l float for the length of the block
+     * @param h float for the height of the block
+     * @param w float for the width of the block
+     * @param x float for the x coordinate
+     * @param y float for the y coordinate
+     * @param z float for the z coordinate
+     */
     public void createDownBlock(float l, float h, float w, float x, float y, float z) {
         Vector3f currentDownPosition;
         downIndex++;
@@ -315,6 +516,9 @@ public class Level {
         game.getBulletAppState().getPhysicsSpace().add(downPhys);
     }
 
+    /**
+     * Move all possible surfaces up one notch.
+     */
     public void moveSurfaceUp() {
         if (!upDownPositionList.isEmpty()) {
             nodeUpDown.move(0f, .5f, 0f);
@@ -332,6 +536,9 @@ public class Level {
         }
     }
 
+    /**
+     * Move all possible surfaces down by one notch.
+     */
     public void moveSurfaceDown() {
         if (!upDownPositionList.isEmpty()) {
             nodeUpDown.move(0f, -.5f, 0f);
@@ -349,6 +556,9 @@ public class Level {
         }
     }
 
+    /**
+     * Remove all moveable surfaces from world and physics space.
+     */
     public void clearMovableSurfaces() {
         nodeUpDown.detachAllChildren();
         nodeUp.detachAllChildren();
@@ -375,6 +585,9 @@ public class Level {
         }
     }
 
+    /**
+     * Clear all position, physics, and geometry lists.
+     */
     public void clearLists() {
         upDownPositionList.clear();
         upPositionList.clear();
@@ -386,18 +599,39 @@ public class Level {
         geomList.clear();
     }
 
+    /**
+     * Returns the model of the current level.
+     *
+     * @return Spacial for the current level.
+     */
     public Spatial getModel() {
         return model;
     }
 
+    /**
+     * Return the player start position.
+     *
+     * @return Vector3f for the initial start position of the player in the
+     * level
+     */
     public Vector3f getPlayerStart() {
         return playerStartPos;
     }
 
+    /**
+     * Return the ball start position.
+     *
+     * @return Vector3f for the initial start position of the ball in the level
+     */
     public Vector3f getBallStart() {
         return ballStartPos;
     }
 
+    /**
+     * Return the current level number.
+     *
+     * @return Integer value for the current level number
+     */
     public int getLevelNum() {
         return levelNum;
     }

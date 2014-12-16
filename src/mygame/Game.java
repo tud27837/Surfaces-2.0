@@ -54,25 +54,24 @@ class Game extends AbstractAppState implements ActionListener {
      */
     private CollisionControl collCon;
     /**
-     * Spatial for the first level
+     * Level object for control of the levels
      */
     private Level level;
     /**
-     * Geometries for all
+     * Geometry for the ball
      */
     private Geometry geomBall;
     /**
      * physics of the ball Geometry
      */
-    public AudioNode backgroundMusic,soundBall,soundSwitchUp,soundSwitchDown;
-    /**
-     * Audio nodes
-     */
     private RigidBodyControl ballPhys;
     /**
-     * text object for the display of text when the level is complete
+     * text object for the display of countdown text at the start of the level
      */
     private BitmapText waitText;
+    /**
+     * text object for the display of the text for the level timer
+     */
     private BitmapText timeText;
     /**
      * boolean for whether the goal has been reached or not
@@ -87,17 +86,74 @@ class Game extends AbstractAppState implements ActionListener {
      */
     private Vector3f walkDirection = new Vector3f();
     /**
-     * booleans for the direction the play is walking
+     * boolean for whether or not the player is walking left
      */
-    private boolean left = false, right = false, up = false, down = false, shiftUp = false, shiftDown = false;
+    private boolean left = false;
+    /**
+     * boolean for whether or not the player is walking right
+     */
+    private boolean right = false;
+    /**
+     * boolean for whether or not the player is walking forward
+     */
+    private boolean up = false;
+    /**
+     * boolean for whether or not the player is walking backward
+     */
+    private boolean down = false;
+    /**
+     * boolean for whether or not the surfaces are moving up
+     */
+    private boolean shiftUp = false;
+    /**
+     * boolean for whether or not the surfaces are moving down
+     */
+    private boolean shiftDown = false;
+    /**
+     * float for the wait time remaining before the timer starts and the player
+     * can move
+     */
     private float waitTime;
+    /**
+     * integer for the initial wait time in seconds
+     */
     private final int INITIALWAITTIME = 3; // seconds
+    /**
+     * float for the seconds value of the level timer
+     */
     private float levelTimeSeconds;
+    /**
+     * integer for the minutes value of the level timer
+     */
     private int levelTimeMinutes;
+    /**
+     * String for the level timer
+     */
     private String levelTimeString;
-    private boolean startTextVisible;
+    /**
+     * boolean for whether or not the wait text is being displayed
+     */
     private boolean waitTextVisible;
+    /**
+     * boolea for whether the game is running(true) or paused(false)
+     */
     private boolean isRunning;
+    /**
+     * AudioNode for the background music
+     */
+    public AudioNode backgroundMusic;
+    /**
+     * AudioNode for the sound of the ball
+     */
+    public AudioNode soundBall;
+    /**
+     * AudioNode for the sound of the reverse gravity switch
+     */
+    public AudioNode soundSwitchUp;
+    /**
+     * AudioNode for the sound of the normal gravity switch
+     */
+    public AudioNode soundSwitchDown;
     // states
     /**
      * the current state
@@ -120,13 +176,22 @@ class Game extends AbstractAppState implements ActionListener {
      */
     private final int END = 3;
 
+    /**
+     * Constructor. Initializes the state to WAIT.
+     */
     public Game() {
-        startTextVisible = false;
         waitTextVisible = false;
         isRunning = true;
         state = WAIT;
     }
 
+    /**
+     * Initializes the game mechanics. Key mappings and text. Called when the
+     * class is initialized.
+     *
+     * @param stateManager application state manager for the project
+     * @param app instance of main
+     */
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         main = (Main) app;
@@ -168,7 +233,7 @@ class Game extends AbstractAppState implements ActionListener {
         initGeometries();
         initPhysics();
         initPlayer();
-	initAudio();
+        initAudio();
         initSky();
 
         // load first level
@@ -177,7 +242,7 @@ class Game extends AbstractAppState implements ActionListener {
 
     /**
      * Determine what happens when a registered key is pressed. Controls player
-     * movement.
+     * movement and surface movement.
      *
      * @param name a String for the name given to the key pressed
      * @param isPressed a boolean to determine if a key is pressed
@@ -223,6 +288,11 @@ class Game extends AbstractAppState implements ActionListener {
         }
     }
 
+    /**
+     * Update loop for the game state.
+     *
+     * @param tpf float for time per frame
+     */
     @Override
     public void update(float tpf) {
         switch (state) {
@@ -305,8 +375,7 @@ class Game extends AbstractAppState implements ActionListener {
     }
 
     /**
-     * Initialize general geometries for game elements. Creates ball, hoop,
-     * gravity switches, lava block, and glass ceiling.
+     * Initialize general geometries for game elements. Creates ball.
      */
     public void initGeometries() {
         // create ball
@@ -348,30 +417,30 @@ class Game extends AbstractAppState implements ActionListener {
         bulletAppState.getPhysicsSpace().addCollisionListener(collCon);
     }
 
-	/** Initialize Audio by adding background music and sounds for gravity switches.
-     * 
+    /**
+     * Initialize Audio by adding background music and sounds for gravity
+     * switches.
      */
-    private void initAudio()
-    {
-        
-        backgroundMusic = new AudioNode(main.getAssetManager(),"Sound/background.wav",true);
+    private void initAudio() {
+        backgroundMusic = new AudioNode(main.getAssetManager(), "Sound/background.wav", true);
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(3);
         main.getRootNode().attachChild(backgroundMusic);
         backgroundMusic.play();
-        
-        soundBall = new AudioNode(main.getAssetManager(),"Sound/Ball Rolling.wav",false);
+
+        soundBall = new AudioNode(main.getAssetManager(), "Sound/Ball Rolling.wav", false);
         soundBall.setVolume(4);
         main.getRootNode().attachChild(backgroundMusic);
-        
-        soundSwitchUp = new AudioNode(main.getAssetManager(),"Sound/Switch Up.wav",false);
+
+        soundSwitchUp = new AudioNode(main.getAssetManager(), "Sound/Switch Up.wav", false);
         soundSwitchUp.setVolume(4);
         main.getRootNode().attachChild(soundSwitchUp);
-        
-        soundSwitchDown = new AudioNode(main.getAssetManager(),"Sound/Switch Down.wav",false);
+
+        soundSwitchDown = new AudioNode(main.getAssetManager(), "Sound/Switch Down.wav", false);
         soundSwitchDown.setVolume(4);
         main.getRootNode().attachChild(soundSwitchDown);
     }
+
     /**
      * Returns true if the goal is reached, false if it is not.
      *
@@ -417,6 +486,11 @@ class Game extends AbstractAppState implements ActionListener {
         return player;
     }
 
+    /**
+     * Returns the ball physics
+     *
+     * @return RigidBodyControl for the ball
+     */
     public RigidBodyControl getBall() {
         return ballPhys;
     }
@@ -437,17 +511,27 @@ class Game extends AbstractAppState implements ActionListener {
     }
 
     /**
-    * Adds a skybox.
-    */
+     * Adds a skybox.
+     */
     private void initSky() {
         Spatial sky = SkyFactory.createSky(main.getAssetManager(), "Textures/BrightSky.dds", false);
         main.getRootNode().attachChild(sky);
     }
-    
+
+    /**
+     * Returns whether or not the game is running.
+     *
+     * @return true is the game is running, false if it is paused
+     */
     public boolean isRunning() {
         return isRunning;
     }
 
+    /**
+     * Toggles the game between running and paused. If the game is running,
+     * pauses game and changes state to paused. If the game is paused, unpauses
+     * game and changes state to running.
+     */
     public void togglePauseGame() {
         if (isRunning) {
             isRunning = false;
@@ -460,11 +544,18 @@ class Game extends AbstractAppState implements ActionListener {
         }
     }
 
+    /**
+     * Removes all objects from the world, physics space, and GUI Node.
+     */
     public void clear() {
         bulletAppState.getPhysicsSpace().removeAll(main.getRootNode());
         Main.clearJMonkey(main);
     }
 
+    /**
+     * End the current level. If it is not the final level, move to the next
+     * level, otherwise go to the start screen.
+     */
     public void endLevel() {
         if (level.nextLevel()) {
             goalReached = false;

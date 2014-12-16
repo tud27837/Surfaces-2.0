@@ -21,47 +21,49 @@ import java.util.List;
 /**
  * Controls the menu screens of the game. Allows player to start the game, go to
  * the score screen, or quit the game.
+ *
  * @author Zack Hunter
  * @version %I% %G%
- * @since 3.0
+ * @since 2.0
  */
 public class StartScreen extends AbstractAppState implements ScreenController, ActionListener {
 
-   /**
-    * copy of main class
-    */
+    /**
+     * copy of main class
+     */
     private Main main;
-   /**
-    * copy of state manager
-    */
+    /**
+     * copy of state manager
+     */
     private AppStateManager asm;
-   /**
-    * instance of Game class
-    */
+    /**
+     * instance of Game class
+     */
     private Game g = null;
-   /**
-    * controller for the screens and popups
-    */
+    /**
+     * controller for the screens and popups
+     */
     private Nifty nifty;
-   /**
-    * controller for the screens
-    */
+    /**
+     * controller for the screens
+     */
     private Screen screen;
-   /**
-    * object for the popup displayed when the game is paused
-    */
+    /**
+     * object for the popup displayed when the game is paused
+     */
     private Element pausePopup;
-   /**
-    * object for the popup displayed asking the user whether or not to quit
-    */
+    /**
+     * object for the popup displayed asking the user whether or not to quit
+     */
     private Element quitPopup;
-   /**
-    * boolean for whether or not a popup is open
-    */
+    /**
+     * boolean for whether or not a popup is open
+     */
     private boolean popupOpen = false;
 
     /**
      * Determine what happens when a registered key is pressed.
+     *
      * @param name a String for the name given to the key pressed
      * @param isPressed a boolean to determine if a key is pressed
      * @param tpf a float containing the time per frame
@@ -84,6 +86,7 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
 
     /**
      * Called when the class is initilized. Creates key mappings.
+     *
      * @param stateManager application state manager for the project
      * @param app instance of main
      */
@@ -99,11 +102,12 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         inputManager.addListener(this, "PauseQuit");
     }
 
-   /**
-    * Switch to start menu. Close the pause popup if it is open. Clear the game 
-    * object if it is not null.
-    * @param nextScreen String designating which nifty screen to switch to
-    */
+    /**
+     * Switch to start menu. Close the pause popup if it is open. Clear the game
+     * object if it is not null.
+     *
+     * @param nextScreen String designating which nifty screen to switch to
+     */
     public void goToStart(String nextScreen) {
         if (popupOpen) {
             closePausePopup("false");
@@ -116,10 +120,11 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         }
     }
 
-   /**
-    * Switch to score screen. Switch states to score screen.
-    * @param nextScreen String designating which nifty screen to switch to
-    */
+    /**
+     * Switch to score screen. Switch states to score screen.
+     *
+     * @param nextScreen String designating which nifty screen to switch to
+     */
     public void goToScores(String nextScreen) {
         nifty.gotoScreen(nextScreen);
         ScoreScreen s = new ScoreScreen();
@@ -127,10 +132,11 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         asm.detach(this);
     }
 
-   /**
-    * Display high scores on the score screen for a particular level.
-    * @param levelStr String for the level number
-    */
+    /**
+     * Display high scores on the score screen for a particular level.
+     *
+     * @param levelStr String for the level number
+     */
     public void showScores(String levelStr) {
         int levelNum = Integer.parseInt(levelStr);
         List<String[]> scores = main.getHighScores(levelNum);
@@ -147,10 +153,11 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         }
     }
 
-   /**
-    * Start the game. Create new game object. Switch to the game state
-    * @param nextScreen String designating which nifty screen to switch to
-    */
+    /**
+     * Start the game. Create new game object. Switch to the game state
+     *
+     * @param nextScreen String designating which nifty screen to switch to
+     */
     public void startGame(String nextScreen) {
         main.getFlyByCamera().setDragToRotate(false);
         nifty.gotoScreen(nextScreen);  // switch to another screen
@@ -162,10 +169,11 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         asm.detach(this);
     }
 
-   /**
-    * Reset the level. Close pause popup if its open.
-    * @param nextScreen String designating which nifty screen to switch to
-    */
+    /**
+     * Reset the level. Close pause popup if its open.
+     *
+     * @param nextScreen String designating which nifty screen to switch to
+     */
     public void restart(String nextScreen) {
         main.getFlyByCamera().setDragToRotate(false);
         nifty.gotoScreen(nextScreen);
@@ -175,38 +183,39 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         }
     }
 
-   /**
-    * Open up the quit confirmation popup.
-    */
+    /**
+     * Open up the quit confirmation popup.
+     */
     public void quitClick() {
         showQuitPopup();
     }
 
-   /**
-    * Bind the nifty and screen objects.
-    * @param nifty controller for the screens and popups
-    * @param screen controller for the screens
-    */
+    /**
+     * Bind the nifty and screen objects.
+     *
+     * @param nifty controller for the screens and popups
+     * @param screen controller for the screens
+     */
     public void bind(Nifty nifty, Screen screen) {
         this.nifty = nifty;
         this.screen = screen;
     }
 
-   /**
-    * Called when the screen is switched to
-    */
+    /**
+     * Called when the screen is switched to
+     */
     public void onStartScreen() {
     }
 
-   /**
-    * Called when the screen is switched from
-    */
+    /**
+     * Called when the screen is switched from
+     */
     public void onEndScreen() {
     }
 
-   /**
-    * Create and display the pause popup if no other popup is open. Pause game.
-    */
+    /**
+     * Create and display the pause popup if no other popup is open. Pause game.
+     */
     public void showPausePopup() {
         if (!popupOpen) {
             main.getFlyByCamera().setDragToRotate(true);
@@ -217,11 +226,12 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         }
     }
 
-   /**
-    * Close the pause popup. Unpause game if necessary.
-    * @param quit String for whether or not the quit popup is opened. Controls 
-    *             whether or not to unpause the game.
-    */
+    /**
+     * Close the pause popup. Unpause game if necessary.
+     *
+     * @param quit String for whether or not the quit popup is opened. Controls
+     * whether or not to unpause the game.
+     */
     public void closePausePopup(String quit) {
         main.getFlyByCamera().setDragToRotate(false);
         popupOpen = false;
@@ -231,18 +241,18 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         }
     }
 
-   /**
-    * Open the quit confirmation popup from the pause popup. Close the pause
-    * popup to open the quit popup.
-    */
+    /**
+     * Open the quit confirmation popup from the pause popup. Close the pause
+     * popup to open the quit popup.
+     */
     public void quitFromPause() {
         closePausePopup("true");
         showQuitPopup();
     }
 
-   /**
-    * Create and display the quit confirmation popup if no other popup is open.
-    */
+    /**
+     * Create and display the quit confirmation popup if no other popup is open.
+     */
     public void showQuitPopup() {
         if (!popupOpen) {
             main.getFlyByCamera().setDragToRotate(true);
@@ -252,9 +262,9 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         }
     }
 
-   /**
-    * Close the quit confirmation popup. Unpause the game if necessary.
-    */
+    /**
+     * Close the quit confirmation popup. Unpause the game if necessary.
+     */
     public void closeQuitPopup() {
         main.getFlyByCamera().setDragToRotate(false);
         popupOpen = false;
@@ -264,26 +274,27 @@ public class StartScreen extends AbstractAppState implements ScreenController, A
         }
     }
 
-   /**
-    * Exit from the program.
-    */
+    /**
+     * Exit from the program.
+     */
     public void quitGame() {
         System.exit(0);
     }
 
-   /**
-    * Go to the next level of the game.
-    */
+    /**
+     * Go to the next level of the game.
+     */
     public void nextLevel() {
         main.getFlyByCamera().setDragToRotate(false);
         nifty.gotoScreen("hud");
         g.endLevel();
     }
 
-   /**
-    * Update loop for the current state. Does nothing.
-    * @param tpf 
-    */
+    /**
+     * Update loop for the current state. Does nothing.
+     *
+     * @param tpf
+     */
     @Override
     public void update(float tpf) {
     }

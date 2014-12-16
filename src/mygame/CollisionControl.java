@@ -10,8 +10,8 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 
 /**
- * Detects collisions between physical objects.
- * 
+ * Controls the detection of collisions between physical objects.
+ *
  * @author Zack Hunter
  * @author Eric Bullock
  * @version %I% %G%
@@ -19,25 +19,27 @@ import com.jme3.math.Vector3f;
  */
 public class CollisionControl extends RigidBodyControl implements PhysicsCollisionListener {
 
-   /**
-    * copy of current Game object
-    */
+    /**
+     * copy of current Game object
+     */
     private Game game;
-    
-   /**
-    * Constructor. Copies <code>game</code> object.
-    * @param game instance of the current game
-    */
+
+    /**
+     * Constructor. Copies game object.
+     *
+     * @param game instance of the current game
+     */
     public CollisionControl(Game game) {
         this.game = game;
     }
 
-   /**
-    * Detects collision between two physical objects.
-    * 
-    * @param event PhysicsCollisionEvent containing properties about the collision 
-    *              including names, speed, etc.
-    */
+    /**
+     * Detects collision between two physical objects. Lava collision, and the
+     * hoop and all switches.
+     *
+     * @param event PhysicsCollisionEvent containing properties about the
+     * collision including names, speed, etc.
+     */
     public void collision(PhysicsCollisionEvent event) {
         if (event.getNodeA().getName().equals("Lava") || event.getNodeB().getName().equals("Lava")) {
             if (event.getNodeA().getName().equals("Player") || event.getNodeB().getName().equals("Player")) {
@@ -47,13 +49,13 @@ public class CollisionControl extends RigidBodyControl implements PhysicsCollisi
                 game.resetLevel();
             }
         }
-        
+
         if (event.getNodeA().getName().equals("Ball") || event.getNodeB().getName().equals("Ball")) {
             // finish hoop
             if (event.getNodeA().getName().equals("Hoop") || event.getNodeB().getName().equals("Hoop")) {
-                    game.goalReached();   
+                game.goalReached();
             }
-            
+
             // high gravity switch
             if (event.getNodeA().getName().equals("HighGravSwitch") || event.getNodeB().getName().equals("HighGravSwitch")) {
                 game.getBulletAppState().getPhysicsSpace().setGravity(new Vector3f(0.0f, -100.0f, 0.0f));
@@ -65,12 +67,12 @@ public class CollisionControl extends RigidBodyControl implements PhysicsCollisi
             // normal gravity switch
             if (event.getNodeA().getName().equals("NormGravSwitch") || event.getNodeB().getName().equals("NormGravSwitch")) {
                 game.getBulletAppState().getPhysicsSpace().setGravity(new Vector3f(0.0f, -9.81f, 0.0f));
-				game.soundSwitchDown.playInstance();
+                game.soundSwitchDown.playInstance();
             }
             // reverse gravity switch
             if (event.getNodeA().getName().equals("RevGravSwitch") || event.getNodeB().getName().equals("RevGravSwitch")) {
                 game.getBulletAppState().getPhysicsSpace().setGravity(new Vector3f(0.0f, 9.81f, 0.0f));
-				game.soundSwitchUp.playInstance();
+                game.soundSwitchUp.playInstance();
             }
         }
     }

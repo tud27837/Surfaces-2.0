@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * Main class of the project. Initializes basic elements, creates and starts a
- * simple app, and starts the game.
+ * simple app, and starts the game, controls high score saving.
  *
  * @author Zack Hunter
  * @version %I% %G%
@@ -58,9 +58,18 @@ public class Main extends SimpleApplication {
      * yellow colored material. Can be applied to many geometries.
      */
     public static Material yellow;
-    //private float[][] highscores = new float[4][10];
+    /**
+     * Map of Integers to a list of string arrays of size 2. Integers for level
+     * number, list for 10 high scores, string arrays for minutes and seconds.
+     */
     private Map<Integer, List<String[]>> highscores;
+    /**
+     * File for saving the highscores.
+     */
     private File file;
+    /**
+     * Controller for screens and popups
+     */
     private Nifty nifty;
 
     /**
@@ -91,7 +100,8 @@ public class Main extends SimpleApplication {
     }
 
     /**
-     *
+     * Initialize the application. Create materials, light and shadows, camera,
+     * GUI properties, and load high scores. Initialize NiftyGui and StartScreen
      */
     @Override
     public void simpleInitApp() {
@@ -140,8 +150,9 @@ public class Main extends SimpleApplication {
     }
 
     /**
+     * Update loop for the project. Nothing happens here.
      *
-     * @param tpf
+     * @param tpf float for time per frame
      */
     @Override
     public void simpleUpdate(float tpf) {
@@ -259,10 +270,21 @@ public class Main extends SimpleApplication {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
     }
 
+    /**
+     * Return NiftyGui for the project.
+     *
+     * @return Nifty instance
+     */
     public Nifty getNifty() {
         return nifty;
     }
 
+    /**
+     * Read in scores from the save file if the file exists.
+     *
+     * @return true if the file exists and the scores were read, otherwise false
+     * @throws IOException
+     */
     private boolean readPreviousScores() throws IOException {
         if (!file.exists()) {
             file.createNewFile();
@@ -287,6 +309,11 @@ public class Main extends SimpleApplication {
         }
     }
 
+    /**
+     * Write the high scores to the save file.
+     *
+     * @throws IOException
+     */
     private void writeScoresToFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
         for (int i = 0; i < 4; i++) {
@@ -300,10 +327,26 @@ public class Main extends SimpleApplication {
         bw.close();
     }
 
+    /**
+     * Return the high scores for the specified level.
+     *
+     * @param level Integer value for the level number
+     * @return List of String arrays of length 2 containing the 10 high scores
+     */
     public List<String[]> getHighScores(int level) {
         return highscores.get(level - 1);
     }
 
+    /**
+     * Set the current high scores. If the score (minutes, seconds) is lower
+     * than any of the scores in the list, that score is put into the list at
+     * the correct place and the last score is removed. The scores are then
+     * written to the save file.
+     *
+     * @param level Integer value for the level
+     * @param minutes Integer value for the minutes of the score
+     * @param seconds Float value for the seconds of the score
+     */
     public void setHighScores(int level, int minutes, float seconds) {
         List<String[]> timeList = highscores.remove(level - 1);
         int index = -1;
